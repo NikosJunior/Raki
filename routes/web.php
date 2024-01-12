@@ -50,6 +50,22 @@ Route::get('/checkout', function() {
     return view('checkout');
 })->name('checkout');
 
-Route::get('/admin', function() {
-    return view('layouts.admin');
-})->name('admin');
+Route::get('/dashboard', function() {
+    return view('dashboard.dashboard');
+});
+
+Route::get('/orders', function() {
+    return view('dashboard.orders');
+});
+
+Route::get('/login', function() {
+    return view('login');
+});
+
+Route::get('/users', function() {
+    return view('dashboard.users');
+});
+
+Route::get('/signup', function() {
+    return view('signup');
+});

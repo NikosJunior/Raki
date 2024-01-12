@@ -1,0 +1,41 @@
+version: '3'
+services:
+  app:
+    image: 'php:8.1-fpm'
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+    networks:
+      - laravel
+  web:
+    image: 'nginx:latest'
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - laravel
+  mysql:
+    image: 'mysql:5.7'
+    environment:
+      MYSQL_DATABASE: raki
+      MYSQL_ROOT_PASSWORD: Joker
+    networks:
+      - laravel
+  redis:
+    image: 'redis:latest'
+    networks:
+      - laravel
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+    networks:
+      - laravel
+networks:
+  laravel:
