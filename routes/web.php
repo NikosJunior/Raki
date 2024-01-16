@@ -62,12 +62,18 @@ Route::get('/login', function() {
     return view('login');
 });
 
-Route::get('/users', function() {
-    return view('dashboard.users');
-});
+Route::get('/users', [UserController::class, "index"]);
 
 Route::get('/signup', function() {
     return view('signup');
 });
 
 Route::post('/register', [UserController::class, "store"] );
+Route::post('/form-login', [UserController::class, "login"]);
+Route::delete('/delete/{id}',[UserController::class, "destroy"])->name('delete_user');
+Route::put('/update_role/{id}', [UserController::class, "update_role"])->name('update_user_role');
+Route::put('/update_user/{id}', [UserController::class, "update"]);
+
+Route::get('/products', function() {
+    return view('dashboard.products');
+});

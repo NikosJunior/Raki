@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Stmt\TryCatch;
 
 
@@ -17,7 +18,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            User::all();
+        } catch (\Exception $e) {
+            session()->flash("error", "Erreur lors de la récupération des utilisateurs");
+            return redirect()->back();
+        }
+        return view('dashboard.users', [
+            'users' => User::orderBy('created_at', 'desc')->paginate(6)
+        ]);
     }
 
     /**
@@ -82,7 +91,26 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Validation des données
+        $validator = Validator::make($request->all(), [
+            "name" => "required:users|regex:/^[\w\s-]+$/|max:100",
+            "email" => "required|email:users|regex:/^.+@.+\..+$/i",
+        ]);
+        if ($validator->fails()) {
+            session()->flash('error', $validator->errors()->first());
+            return redirect()->back();
+        }
+        // dd($request->email);
+        
+        try {
+            User::where("id", $id)->update([
+                "name" => $request->name,
+                "email" => $request->email
+            ]);
+            return redirect()->back()->with('success', 'Modification réussie');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erreur durant la modification');
+        }
     }
 
     /**
@@ -90,6 +118,68 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            User::where("id", $id)->delete();
+        } catch (\Exception $e) {
+            return session()->flash('error', 'Erreur lors de la suppresion');
+        }
+        return redirect()->back()->with('success', 'suppression réussie');
+    }
+
+    /**
+     * Login.
+     */
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "name" => "users|regex:/^[\w\s-]+$/|max:100",
+            "email" => "email:users|regex:/^.+@.+\..+$/i",
+            "password" => "min:8"
+        ]);
+        if ($validator->fails()) {
+            session()->flash('error', $validator->errors()->first());
+            return redirect()->back();
+        }
+        try {
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                session()->flash('error', "Cet email d'utilisateur n'existe pas");
+                return redirect()->back();
+            }
+        } catch (\Exception $e) {
+            session()->flash('error', 'Erreur lors de la connexion');
+            return redirect()->back();
+        }
+        if (!Hash::check($request->password, $user->password)) {
+            session()->flash('error', 'Mot de passe incorrect');
+            return redirect()->back();
+        }
+        return redirect('/');
+    }
+    /**
+     * Make admin or User
+     */
+    public function update_role(string $id)
+    {
+
+        try {
+            $user = User::where("id", $id)->first();
+        } catch (\Exception $e) {
+            return redirect()->back()->with("error", "Erreur lors de larécupération d'utilisateur");
+        }
+        try {
+            if ($user->is_admin == true) {
+                $user->update([
+                    "is_admin" => false
+                ]);
+            } else {
+                $user->update([
+                    "is_admin" => true
+                ]);
+            }
+            return redirect()->back()->with('success', 'Modification réussie');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erreur lors de la modification');
+        }
     }
 }

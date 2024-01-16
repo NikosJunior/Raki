@@ -29,9 +29,14 @@
                     <div class="app-auth-branding mb-4"><a class="app-logo" href="index.html"><img class="logo-icon" src="assets/user/img/logo_raki.png" alt="logo"></a></div>
                     <h2 class="auth-heading text-center mb-5">Log in</h2>
                     <div class="auth-form-container text-start">
-                        <form class="auth-form login-form" action="/register">
+                        <form class="auth-form login-form" action="/form-login" method="post">
                             @csrf
                             @method('post')
+                            @if(session('error'))
+							<div class="alert alert-danger" role="alert">
+								{{ session('error') }}
+							</div>
+							@endif
                             <div class="email mb-3">
                                 <label class="sr-only" for="signin-email">Email</label>
                                 <input id="signin-email" name="email" type="email" class="form-control signin-email" placeholder="Email address" required="required">
@@ -59,7 +64,7 @@
                                 <button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto">Log In</button>
                             </div>
                         </form>
-                        <div class="auth-option text-center pt-5">No Account? Sign up <a class="text-link" href="signup.html">here</a>.</div>
+                        <div class="auth-option text-center pt-5">No Account? Sign up <a class="text-link" href="/signup">here</a>.</div>
                     </div><!--//auth-form-container-->
 
                 </div><!--//auth-body-->

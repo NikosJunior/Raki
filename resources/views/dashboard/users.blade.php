@@ -5,6 +5,12 @@
 
     <div class="app-content pt-3 p-md-3 p-lg-4">
         <div class="container-xl">
+            @if(session('error'))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{session('error')}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
 
             <div class="row g-3 mb-4 align-items-center justify-content-between">
                 <div class="col-auto">
@@ -71,79 +77,123 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($users as $user)
                                         <tr>
-                                            <td class="cell">#15346</td>
-                                            <td class="cell"><span class="truncate">Lorem ipsum dolor sit amet eget
-                                                    volutpat erat</span></td>
-                                            <td class="cell">John Sanders</td>
-                                            <td class="cell"><span>17 Oct</span><span class="note">2:16 PM</span>
+                                            <td class="cell">{{$user->id}}</td>
+                                            <td class="cell"><span class="truncate" class="name">{{$user->name}}</span></td>
+                                            <td class="cell" class="email">{{$user->email}}</td>
+                                            <td class="cell">{{$user->created_at}}</td>
+                                            <td class="cell">
+                                                <form action="{{ route('update_user_role',['id' =>$user->id])}}" method="post">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <a href="" data-bs-toggle="modal" class="update-role" data-bs-target="#update-user-role" data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}"><button type="submit" class="btn btn-sm btn-outline-success">
+                                                            @if($user->is_admin == 0)
+                                                            user
+                                                            @endif
+                                                            @if($user->is_admin == 1)
+                                                            admin
+                                                            @endif
+                                                        </button></a>
+                                                </form>
                                             </td>
-                                            <td class="cell"><span class="badge bg-success">Paid</span></td>
-                                            <td class="cell">$259.35</td>
-                                            <td class="cell"><a class="btn-sm app-btn-secondary" href="#">View</a>
+                                            <td class="cell">
+                                                <a href="" data-bs-toggle="modal" class="update-user" data-bs-target="#exampleModal" data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}" data-user-email="{{ $user->email }}">modifier</a>
+                                            </td>
+                                            <td class="cell">
+                                                <a href="" class="btn btn-sm btn-outline-danger delete-user" data-bs-toggle="modal" data-bs-target="#delete-user" data-user-id="{{ $user->id }}" data-user-name="{{$user->name}}">supprimer</a>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td class="cell">#15345</td>
-                                            <td class="cell"><span class="truncate">Consectetur adipiscing
-                                                    elit</span></td>
-                                            <td class="cell">Dylan Ambrose</td>
-                                            <td class="cell"><span class="cell-data">16 Oct</span><span class="note">03:16 AM</span></td>
-                                            <td class="cell"><span class="badge bg-warning">Pending</span></td>
-                                            <td class="cell">$96.20</td>
-                                            <td class="cell"><a class="btn-sm app-btn-secondary" href="#">View</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="cell">#15344</td>
-                                            <td class="cell"><span class="truncate">Pellentesque diam
-                                                    imperdiet</span></td>
-                                            <td class="cell">Teresa Holland</td>
-                                            <td class="cell"><span class="cell-data">16 Oct</span><span class="note">01:16 AM</span></td>
-                                            <td class="cell"><span class="badge bg-success">Paid</span></td>
-                                            <td class="cell">$123.00</td>
-                                            <td class="cell"><a class="btn-sm app-btn-secondary" href="#">View</a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td class="cell">#15343</td>
-                                            <td class="cell"><span class="truncate">Vestibulum a accumsan lectus sed
-                                                    mollis ipsum</span></td>
-                                            <td class="cell">Jayden Massey</td>
-                                            <td class="cell"><span class="cell-data">15 Oct</span><span class="note">8:07 PM</span></td>
-                                            <td class="cell"><span class="badge bg-success">Paid</span></td>
-                                            <td class="cell">$199.00</td>
-                                            <td class="cell"><a class="btn-sm app-btn-secondary" href="#">View</a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td class="cell">#15342</td>
-                                            <td class="cell"><span class="truncate">Justo feugiat neque</span></td>
-                                            <td class="cell">Reina Brooks</td>
-                                            <td class="cell"><span class="cell-data">12 Oct</span><span class="note">04:23 PM</span></td>
-                                            <td class="cell"><span class="badge bg-danger">Cancelled</span></td>
-                                            <td class="cell">$59.00</td>
-                                            <td class="cell"><a class="btn-sm app-btn-secondary" href="#">View</a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td class="cell">#15341</td>
-                                            <td class="cell"><span class="truncate">Morbi vulputate lacinia neque et
-                                                    sollicitudin</span></td>
-                                            <td class="cell">Raymond Atkins</td>
-                                            <td class="cell"><span class="cell-data">11 Oct</span><span class="note">11:18 AM</span></td>
-                                            <td class="cell"><span class="badge bg-success">Paid</span></td>
-                                            <td class="cell">$678.26</td>
-                                            <td class="cell"><a class="btn-sm app-btn-secondary" href="#">View</a>
-                                            </td>
-                                        </tr>
-
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div><!--//table-responsive-->
+
+                            <!-- Start Modal de modification du profile -->
+
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form id="update" method="post">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <div class="mb-3">
+                                                    <label for="recipient-name" class="col-form-label">Name:</label>
+                                                    <input type="text" class="form-control" id="recipient-name" name="name">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="message-text" class="col-form-label">Email:</label>
+                                                    <input type="text" class="form-control" id="recipient-email" name="email">
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+
+                                                <button type="submit" class="btn btn-primary">Sauvegarder</button>
+
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                            <!-- End Modal de modification du profile -->
+
+                            <!-- Start modal delete -->
+                            <div class="modal fade" id="delete-user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="delete-user-Label">Modal title</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Voulez vous vraiment supprimer l'utilisateur <span class="user_name"></span>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <form id="delete" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger">supprimer</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End modal delete -->
+
+                            <!-- Start modal update status -->
+                            <div class="modal fade" id="update-user-role" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="update-user-role">Make admin</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Voulez vous vraiment changer le role de <span class="user-admin"></span>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <form id="update-role" method="post">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="submit" class="btn btn-outline-danger">Make it</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End modal update status -->
 
                         </div><!--//app-card-body-->
                     </div><!--//app-card-->
@@ -193,44 +243,6 @@
                                             <td class="cell"><a class="btn-sm app-btn-secondary" href="#">View</a>
                                             </td>
                                         </tr>
-
-                                        <tr>
-                                            <td class="cell">#15344</td>
-                                            <td class="cell"><span class="truncate">Pellentesque diam
-                                                    imperdiet</span></td>
-                                            <td class="cell">Teresa Holland</td>
-                                            <td class="cell"><span class="cell-data">16 Oct</span><span class="note">01:16 AM</span></td>
-                                            <td class="cell"><span class="badge bg-success">Paid</span></td>
-                                            <td class="cell">$123.00</td>
-                                            <td class="cell"><a class="btn-sm app-btn-secondary" href="#">View</a>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td class="cell">#15343</td>
-                                            <td class="cell"><span class="truncate">Vestibulum a accumsan lectus sed
-                                                    mollis ipsum</span></td>
-                                            <td class="cell">Jayden Massey</td>
-                                            <td class="cell"><span class="cell-data">15 Oct</span><span class="note">8:07 PM</span></td>
-                                            <td class="cell"><span class="badge bg-success">Paid</span></td>
-                                            <td class="cell">$199.00</td>
-                                            <td class="cell"><a class="btn-sm app-btn-secondary" href="#">View</a>
-                                            </td>
-                                        </tr>
-
-
-                                        <tr>
-                                            <td class="cell">#15341</td>
-                                            <td class="cell"><span class="truncate">Morbi vulputate lacinia neque et
-                                                    sollicitudin</span></td>
-                                            <td class="cell">Raymond Atkins</td>
-                                            <td class="cell"><span class="cell-data">11 Oct</span><span class="note">11:18 AM</span></td>
-                                            <td class="cell"><span class="badge bg-success">Paid</span></td>
-                                            <td class="cell">$678.26</td>
-                                            <td class="cell"><a class="btn-sm app-btn-secondary" href="#">View</a>
-                                            </td>
-                                        </tr>
-
                                     </tbody>
                                 </table>
                             </div><!--//table-responsive-->
@@ -323,4 +335,32 @@
     </footer><!--//app-footer-->
 
 </div><!--//app-wrapper-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+        $('.delete-user').on('click', function() {
+            var userIdTodelete = $(this).data('user-id');
+            $('.user_name').text($(this).data('user-name'));
+            // console.log(userIdTodelete);
+            $('#delete').attr('action', '/delete/' + userIdTodelete);
+
+        })
+        $('.update-user').on('click', function() {
+            var userIdToUpdate = $(this).data('user-id');
+            // console.log(userIdToUpdate);
+            var userNameToUpdate = $(this).data('user-name')
+            var userEmailToUpdate = $(this).data('user-email');
+            $('#update').attr('action', '/update_user/' + userIdToUpdate)
+            $('#recipient-name').attr('value', userNameToUpdate);
+            $('#recipient-email').attr('value', userEmailToUpdate);
+        })
+        $('.update-role').on('click', function() {
+            var userIdToMakeAdmin = $(this).data('user-id');
+            var userNameToMakeAdmin = $(this).data('user-name');
+            $('#update-role').attr('action', '/update_role/'+userIdToMakeAdmin);
+            $('.user-admin').text(userNameToMakeAdmin);
+        })
+
+    })
+</script>
 @endsection
