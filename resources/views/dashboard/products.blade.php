@@ -36,17 +36,17 @@
                                 </select>
                             </div>
                             <div class="col-auto">
-                                <a class="btn app-btn-primary" href="#">Ajouter un produit</a>
+                                <a class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" href="">Ajouter un produit</a>
                             </div>
                         </div><!--//row-->
                     </div><!--//table-utilities-->
                 </div><!--//col-auto-->
             </div><!--//row-->
             <nav id="orders-table-tab" class="orders-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-                <a class="flex-sm-fill text-sm-center nav-link active" id="products-all-tab" data-bs-toggle="tab" href="#products-all" role="tab" aria-controls="products-all" aria-selected="true">All</a>
-                <a class="flex-sm-fill text-sm-center nav-link" id="orders-paid-tab" data-bs-toggle="tab" href="#jus" role="tab" aria-controls="jus" aria-selected="false">Jus</a>
-                <a class="flex-sm-fill text-sm-center nav-link" id="orders-pending-tab" data-bs-toggle="tab" href="#food" role="tab" aria-controls="food" aria-selected="false">Food</a>
-                <a class="flex-sm-fill text-sm-center nav-link" id="orders-cancelled-tab" data-bs-toggle="tab" href="#bread" role="tab" aria-controls="bread" aria-selected="false">Bread</a>
+                <a class="flex-sm-fill text-sm-center nav-link active text-uppercase" id="products-all-tab" data-bs-toggle="tab" href="#products-all" role="tab" aria-controls="products-all" aria-selected="true">All</a>
+                <a class="flex-sm-fill text-sm-center nav-link text-uppercase" id="orders-paid-tab" data-bs-toggle="tab" href="#jus" role="tab" aria-controls="jus" aria-selected="false">JUS</a>
+                <a class="flex-sm-fill text-sm-center nav-link text-uppercase" id="orders-pending-tab" data-bs-toggle="tab" href="#food" role="tab" aria-controls="food" aria-selected="false">Food</a>
+                <a class="flex-sm-fill text-sm-center nav-link text-uppercase" id="orders-cancelled-tab" data-bs-toggle="tab" href="#bread" role="tab" aria-controls="bread" aria-selected="false">Bread</a>
             </nav>
 
             <div class="row g-4">
@@ -714,5 +714,49 @@
 
 </div><!--//app-wrapper-->
 
+<!-- Start Modal Ajout de produits -->
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="" method="post">
+            @csrf
+            @method('POST')
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="recipient-name" name="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Email:</label>
+                        <input type="text" class="form-control" id="recipient-email" name="email">
+                    </div>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>Catégory</option>
+                        <option value="1">Jus</option>
+                        <option value="2">Food</option>
+                        <option value="3">Bread</option>
+                    </select>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Image:</label>
+                        <input class="form-control" type="file" id="formFile">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+</div>
+<!-- End Modal de modification du profile -->
 
 @endsection
