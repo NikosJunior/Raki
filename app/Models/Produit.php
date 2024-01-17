@@ -12,7 +12,9 @@ class Produit extends Model
     protected $fillable = [
         'name',
         'prix',
-        'quantity'
+        'quantity',
+        'description',
+        'img',
     ];
     public function category():BelongsTo
     {

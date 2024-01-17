@@ -18,12 +18,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        try {
-            User::all();
-        } catch (\Exception $e) {
-            session()->flash("error", "Erreur lors de la récupération des utilisateurs");
-            return redirect()->back();
-        }
         return view('dashboard.users', [
             'users' => User::orderBy('created_at', 'desc')->paginate(6)
         ]);

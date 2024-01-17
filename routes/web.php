@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\ProduitController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Models\Produit;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -74,6 +77,5 @@ Route::delete('/delete/{id}',[UserController::class, "destroy"])->name('delete_u
 Route::put('/update_role/{id}', [UserController::class, "update_role"])->name('update_user_role');
 Route::put('/update_user/{id}', [UserController::class, "update"]);
 
-Route::get('/products', function() {
-    return view('dashboard.products');
-});
+Route::get('/products', [ProduitController::class, "index"]);
+Route::post('/addProducts', [ProduitController::class, "store"]);
