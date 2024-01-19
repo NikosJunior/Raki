@@ -2601,7 +2601,8 @@ textarea.form-control-sm {
 }
 
 textarea.form-control-lg {
-    min-height: calc(1.5em + 1rem + calc(var(--bs-border-width) * 2))
+    min-height: calc(1.5em + 1rem + calc(var(--bs-border-width) * 2));
+    
 }
 
 .form-control-color {
@@ -14781,7 +14782,7 @@ button.close:focus {
     background: #e9eaf1;
     text-align: center;
     position: relative;
-    height: 112px
+    height: 145px
 }
 
 .app-card-doc .app-card-thumb-holder .app-card-thumb {
@@ -15253,4 +15254,10 @@ button.close:focus {
     .app-auth-wrapper .app-auth-body {
         width: 100%
     }
+}
+#update-description:hover {
+    border-width: 1px;
+}
+.category {
+    display: none;
 }
